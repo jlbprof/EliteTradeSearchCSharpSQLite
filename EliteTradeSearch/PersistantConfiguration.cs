@@ -6,8 +6,25 @@ using System.Threading.Tasks;
 
 namespace EliteTradeSearch
 {
-    class PersistantConfiguration
+    public sealed class PersistantConfiguration
     {
+        private static PersistantConfiguration instance = null;
+        private static readonly object padlock = new object();
+
+        public static PersistantConfiguration Instance
+        {
+            get
+            {
+                lock (padlock)
+                {
+                    if (instance == null)
+                        instance = new PersistantConfiguration();
+
+                    return instance;
+                }
+            }
+        }
+
         private String sDataDir;
         private String sSystemsPopulatedURL;
         private String sStationsURL;
@@ -86,7 +103,7 @@ namespace EliteTradeSearch
             this.sCommoditiesURL = Properties.Settings.Default.CommoditiesURL;
         }
 
-        public PersistantConfiguration()
+        private PersistantConfiguration()
         {
             _InitConfiguration();
         }

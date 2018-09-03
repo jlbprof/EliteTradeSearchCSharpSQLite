@@ -72,6 +72,19 @@
             this.lDataDirUpdate = new System.Windows.Forms.Label();
             this.lWarningDataNeedsDownload = new System.Windows.Forms.Label();
             this.InsertData = new System.Windows.Forms.TabPage();
+            this.btnInsertPrices = new System.Windows.Forms.Button();
+            this.txtInsertPricesStatus = new System.Windows.Forms.TextBox();
+            this.lInsertPrices = new System.Windows.Forms.Label();
+            this.btnInsertStations = new System.Windows.Forms.Button();
+            this.txtInsertStationsStatus = new System.Windows.Forms.TextBox();
+            this.lInsertStations = new System.Windows.Forms.Label();
+            this.btnInsertSystems = new System.Windows.Forms.Button();
+            this.txtInsertSystemsStatus = new System.Windows.Forms.TextBox();
+            this.lInsertSystems = new System.Windows.Forms.Label();
+            this.btnInsertCommodities = new System.Windows.Forms.Button();
+            this.txtInsertCommoditiesStatus = new System.Windows.Forms.TextBox();
+            this.lInsertCommodities = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             this.btnCreateDatabase = new System.Windows.Forms.Button();
             this.lDataBaseFileExists = new System.Windows.Forms.Label();
             this.txtDataBaseFile = new System.Windows.Forms.TextBox();
@@ -79,6 +92,7 @@
             this.ExitButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.btnResetConfig = new System.Windows.Forms.Button();
+            this.lWorking = new System.Windows.Forms.Label();
             this.FeatureAccess.SuspendLayout();
             this.configPage.SuspendLayout();
             this.UpdateData.SuspendLayout();
@@ -339,7 +353,7 @@
             this.lblWorking.BackColor = System.Drawing.Color.Red;
             this.lblWorking.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblWorking.ForeColor = System.Drawing.SystemColors.Control;
-            this.lblWorking.Location = new System.Drawing.Point(16, 279);
+            this.lblWorking.Location = new System.Drawing.Point(15, 354);
             this.lblWorking.Name = "lblWorking";
             this.lblWorking.Size = new System.Drawing.Size(0, 20);
             this.lblWorking.TabIndex = 23;
@@ -522,6 +536,19 @@
             // 
             // InsertData
             // 
+            this.InsertData.Controls.Add(this.btnInsertPrices);
+            this.InsertData.Controls.Add(this.txtInsertPricesStatus);
+            this.InsertData.Controls.Add(this.lInsertPrices);
+            this.InsertData.Controls.Add(this.btnInsertStations);
+            this.InsertData.Controls.Add(this.txtInsertStationsStatus);
+            this.InsertData.Controls.Add(this.lInsertStations);
+            this.InsertData.Controls.Add(this.btnInsertSystems);
+            this.InsertData.Controls.Add(this.txtInsertSystemsStatus);
+            this.InsertData.Controls.Add(this.lInsertSystems);
+            this.InsertData.Controls.Add(this.btnInsertCommodities);
+            this.InsertData.Controls.Add(this.txtInsertCommoditiesStatus);
+            this.InsertData.Controls.Add(this.lInsertCommodities);
+            this.InsertData.Controls.Add(this.label10);
             this.InsertData.Controls.Add(this.btnCreateDatabase);
             this.InsertData.Controls.Add(this.lDataBaseFileExists);
             this.InsertData.Controls.Add(this.txtDataBaseFile);
@@ -533,19 +560,138 @@
             this.InsertData.Text = "Insert Data";
             this.InsertData.UseVisualStyleBackColor = true;
             // 
+            // btnInsertPrices
+            // 
+            this.btnInsertPrices.Location = new System.Drawing.Point(317, 211);
+            this.btnInsertPrices.Name = "btnInsertPrices";
+            this.btnInsertPrices.Size = new System.Drawing.Size(180, 23);
+            this.btnInsertPrices.TabIndex = 22;
+            this.btnInsertPrices.Text = "Re-Insert Prices";
+            this.btnInsertPrices.UseVisualStyleBackColor = true;
+            this.btnInsertPrices.Click += new System.EventHandler(this.btnInsertPrices_Click);
+            // 
+            // txtInsertPricesStatus
+            // 
+            this.txtInsertPricesStatus.Location = new System.Drawing.Point(94, 214);
+            this.txtInsertPricesStatus.Name = "txtInsertPricesStatus";
+            this.txtInsertPricesStatus.ReadOnly = true;
+            this.txtInsertPricesStatus.Size = new System.Drawing.Size(204, 20);
+            this.txtInsertPricesStatus.TabIndex = 21;
+            // 
+            // lInsertPrices
+            // 
+            this.lInsertPrices.AutoSize = true;
+            this.lInsertPrices.Location = new System.Drawing.Point(19, 217);
+            this.lInsertPrices.Name = "lInsertPrices";
+            this.lInsertPrices.Size = new System.Drawing.Size(34, 13);
+            this.lInsertPrices.TabIndex = 20;
+            this.lInsertPrices.Text = "Price:";
+            // 
+            // btnInsertStations
+            // 
+            this.btnInsertStations.Location = new System.Drawing.Point(317, 166);
+            this.btnInsertStations.Name = "btnInsertStations";
+            this.btnInsertStations.Size = new System.Drawing.Size(180, 23);
+            this.btnInsertStations.TabIndex = 19;
+            this.btnInsertStations.Text = "Re-Insert Stations";
+            this.btnInsertStations.UseVisualStyleBackColor = true;
+            this.btnInsertStations.Click += new System.EventHandler(this.btnInsertStations_Click);
+            // 
+            // txtInsertStationsStatus
+            // 
+            this.txtInsertStationsStatus.Location = new System.Drawing.Point(94, 169);
+            this.txtInsertStationsStatus.Name = "txtInsertStationsStatus";
+            this.txtInsertStationsStatus.ReadOnly = true;
+            this.txtInsertStationsStatus.Size = new System.Drawing.Size(204, 20);
+            this.txtInsertStationsStatus.TabIndex = 18;
+            // 
+            // lInsertStations
+            // 
+            this.lInsertStations.AutoSize = true;
+            this.lInsertStations.Location = new System.Drawing.Point(19, 172);
+            this.lInsertStations.Name = "lInsertStations";
+            this.lInsertStations.Size = new System.Drawing.Size(48, 13);
+            this.lInsertStations.TabIndex = 17;
+            this.lInsertStations.Text = "Stations:";
+            // 
+            // btnInsertSystems
+            // 
+            this.btnInsertSystems.Location = new System.Drawing.Point(317, 124);
+            this.btnInsertSystems.Name = "btnInsertSystems";
+            this.btnInsertSystems.Size = new System.Drawing.Size(180, 23);
+            this.btnInsertSystems.TabIndex = 16;
+            this.btnInsertSystems.Text = "Re-Insert Systems";
+            this.btnInsertSystems.UseVisualStyleBackColor = true;
+            this.btnInsertSystems.Click += new System.EventHandler(this.btnInsertSystems_Click);
+            // 
+            // txtInsertSystemsStatus
+            // 
+            this.txtInsertSystemsStatus.Location = new System.Drawing.Point(94, 127);
+            this.txtInsertSystemsStatus.Name = "txtInsertSystemsStatus";
+            this.txtInsertSystemsStatus.ReadOnly = true;
+            this.txtInsertSystemsStatus.Size = new System.Drawing.Size(204, 20);
+            this.txtInsertSystemsStatus.TabIndex = 15;
+            // 
+            // lInsertSystems
+            // 
+            this.lInsertSystems.AutoSize = true;
+            this.lInsertSystems.Location = new System.Drawing.Point(19, 130);
+            this.lInsertSystems.Name = "lInsertSystems";
+            this.lInsertSystems.Size = new System.Drawing.Size(49, 13);
+            this.lInsertSystems.TabIndex = 14;
+            this.lInsertSystems.Text = "Systems:";
+            // 
+            // btnInsertCommodities
+            // 
+            this.btnInsertCommodities.Location = new System.Drawing.Point(317, 84);
+            this.btnInsertCommodities.Name = "btnInsertCommodities";
+            this.btnInsertCommodities.Size = new System.Drawing.Size(180, 23);
+            this.btnInsertCommodities.TabIndex = 13;
+            this.btnInsertCommodities.Text = "Re-Insert Commodities";
+            this.btnInsertCommodities.UseVisualStyleBackColor = true;
+            this.btnInsertCommodities.Click += new System.EventHandler(this.btnInsertCommodities_Click);
+            // 
+            // txtInsertCommoditiesStatus
+            // 
+            this.txtInsertCommoditiesStatus.Location = new System.Drawing.Point(94, 87);
+            this.txtInsertCommoditiesStatus.Name = "txtInsertCommoditiesStatus";
+            this.txtInsertCommoditiesStatus.ReadOnly = true;
+            this.txtInsertCommoditiesStatus.Size = new System.Drawing.Size(204, 20);
+            this.txtInsertCommoditiesStatus.TabIndex = 12;
+            // 
+            // lInsertCommodities
+            // 
+            this.lInsertCommodities.AutoSize = true;
+            this.lInsertCommodities.Location = new System.Drawing.Point(19, 90);
+            this.lInsertCommodities.Name = "lInsertCommodities";
+            this.lInsertCommodities.Size = new System.Drawing.Size(69, 13);
+            this.lInsertCommodities.TabIndex = 11;
+            this.lInsertCommodities.Text = "Commodities:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(19, 50);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(727, 13);
+            this.label10.TabIndex = 10;
+            this.label10.Text = "_________________________________________________________________________________" +
+    "_______________________________________";
+            // 
             // btnCreateDatabase
             // 
-            this.btnCreateDatabase.Location = new System.Drawing.Point(493, 10);
+            this.btnCreateDatabase.Location = new System.Drawing.Point(542, 10);
             this.btnCreateDatabase.Name = "btnCreateDatabase";
-            this.btnCreateDatabase.Size = new System.Drawing.Size(223, 23);
+            this.btnCreateDatabase.Size = new System.Drawing.Size(223, 22);
             this.btnCreateDatabase.TabIndex = 3;
             this.btnCreateDatabase.Text = "Create Database";
             this.btnCreateDatabase.UseVisualStyleBackColor = true;
+            this.btnCreateDatabase.Click += new System.EventHandler(this.btnCreateDatabase_Click);
             // 
             // lDataBaseFileExists
             // 
             this.lDataBaseFileExists.AutoSize = true;
-            this.lDataBaseFileExists.Location = new System.Drawing.Point(434, 15);
+            this.lDataBaseFileExists.Location = new System.Drawing.Point(417, 15);
             this.lDataBaseFileExists.Name = "lDataBaseFileExists";
             this.lDataBaseFileExists.Size = new System.Drawing.Size(53, 13);
             this.lDataBaseFileExists.TabIndex = 2;
@@ -553,7 +699,7 @@
             // 
             // txtDataBaseFile
             // 
-            this.txtDataBaseFile.Location = new System.Drawing.Point(105, 12);
+            this.txtDataBaseFile.Location = new System.Drawing.Point(88, 12);
             this.txtDataBaseFile.Name = "txtDataBaseFile";
             this.txtDataBaseFile.ReadOnly = true;
             this.txtDataBaseFile.Size = new System.Drawing.Size(323, 20);
@@ -562,7 +708,7 @@
             // lDataBaseFile
             // 
             this.lDataBaseFile.AutoSize = true;
-            this.lDataBaseFile.Location = new System.Drawing.Point(20, 15);
+            this.lDataBaseFile.Location = new System.Drawing.Point(3, 15);
             this.lDataBaseFile.Name = "lDataBaseFile";
             this.lDataBaseFile.Size = new System.Drawing.Size(79, 13);
             this.lDataBaseFile.TabIndex = 0;
@@ -598,11 +744,21 @@
             this.btnResetConfig.UseVisualStyleBackColor = true;
             this.btnResetConfig.Click += new System.EventHandler(this.btnResetConfig_Click);
             // 
+            // lWorking
+            // 
+            this.lWorking.AutoSize = true;
+            this.lWorking.Location = new System.Drawing.Point(13, 522);
+            this.lWorking.Name = "lWorking";
+            this.lWorking.Size = new System.Drawing.Size(59, 13);
+            this.lWorking.TabIndex = 4;
+            this.lWorking.Text = "Working ...";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(808, 555);
+            this.Controls.Add(this.lWorking);
             this.Controls.Add(this.btnResetConfig);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ExitButton);
@@ -674,6 +830,20 @@
         private System.Windows.Forms.Button btnDownloadCommoditiesData;
         private System.Windows.Forms.TextBox txtCommoditiesStatus;
         private System.Windows.Forms.Label lDataOnCommodities;
+        private System.Windows.Forms.Label lInsertCommodities;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Button btnInsertPrices;
+        private System.Windows.Forms.TextBox txtInsertPricesStatus;
+        private System.Windows.Forms.Label lInsertPrices;
+        private System.Windows.Forms.Button btnInsertStations;
+        private System.Windows.Forms.TextBox txtInsertStationsStatus;
+        private System.Windows.Forms.Label lInsertStations;
+        private System.Windows.Forms.Button btnInsertSystems;
+        private System.Windows.Forms.TextBox txtInsertSystemsStatus;
+        private System.Windows.Forms.Label lInsertSystems;
+        private System.Windows.Forms.Button btnInsertCommodities;
+        private System.Windows.Forms.TextBox txtInsertCommoditiesStatus;
+        private System.Windows.Forms.Label lWorking;
     }
 }
 
