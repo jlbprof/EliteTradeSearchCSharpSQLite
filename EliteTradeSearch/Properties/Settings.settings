@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="EliteTradeSearch.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DataDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">_NOTSET_</Value>
+    </Setting>
+    <Setting Name="SystemsPopulatedURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://eddb.io/archive/v5/systems_populated.jsonl</Value>
+    </Setting>
+    <Setting Name="StationsURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://eddb.io/archive/v5/stations.jsonl</Value>
+    </Setting>
+    <Setting Name="PricesURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://eddb.io/archive/v5/listings.csv</Value>
+    </Setting>
+    <Setting Name="CommoditiesURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://eddb.io/archive/v5/commodities.json</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
