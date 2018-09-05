@@ -1,4 +1,13 @@
-﻿using System;
+﻿//
+// Copyright 2018 - Julian Brown
+//
+// MIT License
+//
+// Original Author: Julian Brown
+// Sept 05, 2018
+//
+
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
@@ -11,9 +20,22 @@ using Newtonsoft.Json;
 
 namespace EliteTradeSearch
 {
+    // TradeSearchSQL would wrap whatever data engine that you want
+    // Later if I have time, I will build other data engines and this
+    // one would be renamed TradeSearchSQLite, and then the TradeSearchSQL
+    // would be a parent class
+
+    // I may want to make this object a Singleton as well, but at the moment
+    // only one other class is calling it, if others were created that needed
+    // access to the DB, this should be a Singleton
+
     class TradeSearchSQL
     {
+        // We need a copy of the configuration, to know where to put things
+
         private PersistantConfiguration myConfiguration = null;
+
+        // this connection is managed by connect and closeConnection
         private SQLiteConnection myConnection = null;
 
         public TradeSearchSQL()
@@ -61,12 +83,18 @@ namespace EliteTradeSearch
             }
         }
 
+        // Real simple, delete any existing database, for SQLite just delete the file
+        // Create the new data file, and inject the schema
+
         public void CreateDatabase ()
         {
             closeConnection();
 
             if (doesDBExist)
                 File.Delete(myConfiguration.DataBaseFile);
+
+            // fyi, by connecting to the db, the file is created if it does not already
+            // exist
 
             connect();
 
@@ -75,6 +103,9 @@ namespace EliteTradeSearch
 
             closeConnection();
         }
+
+        // Get a count of these various tables, purpose is to find out if any data has been inserted
+        // into these tables or not
 
         public int countCommodities ()
         {
@@ -136,6 +167,8 @@ namespace EliteTradeSearch
             return myReader.GetInt32(0);
         }
 
+        // insert the data from the commodities download and insert them into the db
+
         public void insertCommodities ()
         {
             if (!doesDBExist)
@@ -146,15 +179,23 @@ namespace EliteTradeSearch
 
             connect();
 
+            // The data is stored as one large JSON object, read it in and parse it
+            // into an object
+
             String commoditiesJson = File.ReadAllText(myConfiguration.CommoditiesFile);
             dynamic myCommodities = JsonConvert.DeserializeObject(commoditiesJson);
 
             int count = myCommodities.Count;
             int i;
 
+            // Using one transaction (begin/commit) so that indexing is deferred, this makes this
+            // mass insert much faster.   Note we also delete any existing data, as we are really
+            // replacing with this new download
+
             SQLiteCommand myCommand = new SQLiteCommand("BEGIN TRANSACTION; DELETE FROM commodities;", myConnection);
             SQLiteDataReader myReader = myCommand.ExecuteReader();
 
+            // set up the insert pattern
             myCommand = new SQLiteCommand("INSERT INTO commodities (\"id\", \"name\") VALUES (@id, @name);", myConnection);
 
             for (i = 0; i < count; ++i)
@@ -162,6 +203,8 @@ namespace EliteTradeSearch
                 dynamic working = myCommodities[i];
 
                 String output = "ID :" + working.id + ": Name :" + working.name + ":";
+
+                // using the binding parameters mechanism provided by SQLite
 
                 myCommand.Parameters.Clear();
                 myCommand.Parameters.AddWithValue("@id", working.id);
@@ -172,9 +215,15 @@ namespace EliteTradeSearch
                 Debug.Print (output);
             }
 
+            // and commit
+            // TBD: put this in a try/catch with a rollback
+
             myCommand = new SQLiteCommand("COMMIT TRANSACTION;", myConnection);
             myReader = myCommand.ExecuteReader();
         }
+
+        // These all follow similar patterns but the input data is processed differently
+        // depending on the input type
 
         public void insertSystems()
         {
@@ -195,9 +244,15 @@ namespace EliteTradeSearch
 
             myCommand = new SQLiteCommand("INSERT INTO Systems (\"id\", \"edsm_id\", \"name\", \"x\", \"y\", \"z\", \"needs_permit\") VALUES (@id, @edsm_id, @name, @x, @y, @z, @needs_permit);", myConnection);
 
+            // The input file is a jsonl file, that is each line is a complete json object that can be independantly parsed
+            // and inserted.
+
             while ((jsonString = sr.ReadLine()) != null)
             {
                 dynamic mySystem = JsonConvert.DeserializeObject(jsonString);
+
+                // needs_permit, is either true or false in the jsonl, but in the SQLite, I am using
+                // 1 or 0, so I am converting it
 
                 int needs_permit = 0;
                 if (mySystem.needs_permit == "true")
@@ -242,10 +297,13 @@ namespace EliteTradeSearch
 
             myCommand = new SQLiteCommand("INSERT INTO Stations (\"id\", \"name\", \"system_id\", \"updated_at\", \"max_landing_pad_size\", \"distance_to_star\", \"is_planetary\") VALUES (@id, @name, @system_id, @updated_at, @max_landing_pad_size, @distance_to_star, @is_planetary);", myConnection);
 
+            // this data is also a jsonl file, following the same pattern
+
             while ((jsonString = sr.ReadLine()) != null)
             {
                 dynamic myStation = JsonConvert.DeserializeObject(jsonString);
 
+                // is_planetary is either true or false, convert it to 1 or 0
                 int is_planetary = 0;
                 if (myStation.is_planetary == "true")
                 {
@@ -280,6 +338,10 @@ namespace EliteTradeSearch
 
             connect();
 
+            // OK, this one is different, the data is a CSV file.   And I have to throw away
+            // the first line, which is a header.
+            // Note, I borrowed TextFieldParser from VisualBasic, so shoot me
+
             TextFieldParser myParser = new TextFieldParser(myConfiguration.PricesFile);
             myParser.SetDelimiters(",");
             myParser.ReadLine(); // Skip header line
@@ -292,6 +354,9 @@ namespace EliteTradeSearch
 
             while (!myParser.EndOfData)
             {
+                // The csv fields is returned an array of strings, just have to know
+                // which index is what value.
+
                 String[] fields = myParser.ReadFields();
 
                 myCommand.Parameters.Clear();
@@ -311,6 +376,8 @@ namespace EliteTradeSearch
             myCommand = new SQLiteCommand("COMMIT TRANSACTION;", myConnection);
             myReader = myCommand.ExecuteReader();
         }
+
+        // have the schema be returned from this method, just a convenience for db creation
 
         public String getSchemaSQL
         {

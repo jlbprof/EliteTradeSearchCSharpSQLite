@@ -1,4 +1,12 @@
-﻿using System;
+﻿//
+// Copyright 2018 - Julian Brown
+//
+// MIT License
+//
+// Original Author: Julian Brown
+// Sept 05, 2018
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +14,12 @@ using System.Threading.Tasks;
 
 namespace EliteTradeSearch
 {
+    // This class is a wrapper of Properties.Settings
+    // with some convenience routines and a Singleton pattern.
+
     public sealed class PersistantConfiguration
     {
+        // Begin Singleton Pattern
         private static PersistantConfiguration instance = null;
         private static readonly object padlock = new object();
 
@@ -24,6 +36,7 @@ namespace EliteTradeSearch
                 }
             }
         }
+        // End Singlton Pattern
 
         private String sDataDir;
         private String sSystemsPopulatedURL;
@@ -50,6 +63,8 @@ namespace EliteTradeSearch
         {
             get { return sCommoditiesURL; }
         }
+
+        // Convenience routines, properties actually
 
         public String SystemsPopulatedFile
         {
@@ -85,6 +100,8 @@ namespace EliteTradeSearch
                 Properties.Settings.Default.Save();
             }
         }
+
+        // This populates the data for the object
 
         private void _InitConfiguration ()
         {

@@ -1,4 +1,20 @@
-﻿using System;
+﻿//
+// EliteTradeSearch - Database update software
+//
+// Elite Dangerous is a game of space exploration and trading between stations.
+//
+// This program guides you through the downloading of the latest data, and
+// keeping a SQLite database updated with this downloaded information.
+//
+// Copyright 2018 - Julian Brown
+//
+// MIT License
+//
+// Original Author: Julian Brown
+// Sept 05, 2018
+//
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,20 +31,50 @@ namespace EliteTradeSearch
 {
     public partial class MainForm : Form
     {
+        // PersistantConfiguration is a wrapper around the normal .NET persistant
+        // settings code, with some convenience routines.
+
         private PersistantConfiguration myConfiguration;
+
+        // TradeSearachSQL, wraps around the SQL database, currently it only
+        // supports SQLite, but could easily be changed to any database
+        // including but not limited to SQL Server, MySQL, PostgresSQL
+        //
+
         private TradeSearchSQL myTradeSearch;
+
+        // _initFromConfig - manages the state of the window.   All buttons
+        // text boxes, labels etc that need to be set, are set from this
+        // method.
 
         private void _initFromConfig()
         {
+            // Start with the data from the configuration
+
             txtDataDirectory.Text = myConfiguration.DataDir;
             txtDataDirUpdate.Text = myConfiguration.DataDir;
+
+            // These URL's will likely never change, so I do not provide
+            // an easy way to change them.   They can be changed by editting
+            // the persistant storage file
+ 
             txtSystemsURL.Text = myConfiguration.SystemsPopulatedURL;
             txtStationsURL.Text = myConfiguration.StationsURL;
             txtPricesURL.Text = myConfiguration.PricesURL;
             txtCommoditiesURL.Text = myConfiguration.CommoditiesURL;
 
+            // Does the configured or chosen data directory exist or not,
+            // if so we provide a way to create it.
+            // All data is downloaded and the database will reside inside
+            // this directory, please be certain you have plenty of data in
+            // here.
+
             if (System.IO.Directory.Exists(myConfiguration.DataDir))
             {
+                // This is the case where the directory already exists, we now
+                // need to evaluate and set the state of all the buttons and text
+                // boxes, and labels.
+
                 lDataDirDoesNotExist.Visible = false;
                 btnCreateDataDir.Visible = false;
 
@@ -36,17 +82,28 @@ namespace EliteTradeSearch
                 btnDownloadStationsData.Enabled = true;
                 btnDownloadPricesData.Enabled = true;
                 btnDownloadAllData.Enabled = true;
+                btnDownloadCommoditiesData.Enabled = true;
 
+                btnCreateDatabase.Enabled = true;
+                btnInsertCommodities.Enabled = true;
+                btnInsertSystems.Enabled = true;
+                btnInsertStations.Enabled = true;
+                btnInsertPrices.Enabled = true;
+
+                // If we have a copy of the file or not
                 if (System.IO.File.Exists(myConfiguration.SystemsPopulatedFile))
                 {
                     FileInfo fi = new FileInfo(myConfiguration.SystemsPopulatedFile);
+                    // tell them the date it was downloaded
                     txtSystemsStatus.Text = fi.LastWriteTime.ToShortDateString();
                 }
                 else
                 {
+                    // tell them it is not downloaded
                     txtSystemsStatus.Text = "Not downloaded";
                 }
 
+                // same for the other data files
                 if (System.IO.File.Exists(myConfiguration.StationsFile))
                 {
                     FileInfo fi = new FileInfo(myConfiguration.StationsFile);
@@ -82,6 +139,9 @@ namespace EliteTradeSearch
             }
             else
             {
+                // this is the case where the directory does not exist
+                // shutdown everything till it is created
+
                 lDataDirDoesNotExist.Visible = true;
                 btnCreateDataDir.Visible = true;
 
@@ -89,6 +149,13 @@ namespace EliteTradeSearch
                 btnDownloadStationsData.Enabled = false;
                 btnDownloadPricesData.Enabled = false;
                 btnDownloadAllData.Enabled = false;
+                btnDownloadCommoditiesData.Enabled = false;
+
+                btnCreateDatabase.Enabled = false;
+                btnInsertCommodities.Enabled = false;
+                btnInsertSystems.Enabled = false;
+                btnInsertStations.Enabled = false;
+                btnInsertPrices.Enabled = false;
 
                 txtSystemsStatus.Text = "Not downloaded";
                 txtStationsStatus.Text = "Not downloaded";
@@ -220,7 +287,14 @@ namespace EliteTradeSearch
                 btnInsertSystems.Enabled = false;
             }
 
+            // I force an update as some of the places where this is called
+            // does not get back to the windows message loop in a timely
+            // fashion.
+
             this.Update();
+
+            // If things are changed close the SQL DB, and be ready for another
+            // run.
 
             myTradeSearch.closeConnection();
         }
@@ -228,13 +302,19 @@ namespace EliteTradeSearch
         public MainForm()
         {
             InitializeComponent();
+            // myConfig is a Singleton, so it can be referenced from anywhere
             myConfiguration = PersistantConfiguration.Instance;
             myTradeSearch = new TradeSearchSQL ();
             _initFromConfig();
         }
 
+        // Here are all the actions when the various buttons are pressed.
+
         private void btnDataDirBrowse_Click(object sender, EventArgs e)
         {
+            // put up a directory browser, so they can pick a directory where to
+            // store all this data.
+
             FolderBrowserDialog myFolderBrowser = new FolderBrowserDialog
             {
                 Description = "Choose a Folder that will contain data downloads.",
@@ -250,6 +330,7 @@ namespace EliteTradeSearch
 
         private void ExitButton_Click(object sender, EventArgs e)
         {
+            // Message loop based applications, use this method to quit.
             System.Windows.Forms.Application.Exit();
         }
 
@@ -265,10 +346,20 @@ namespace EliteTradeSearch
             _initFromConfig();
         }
 
+        // I separated out the actual file download code, so that it can be called
+        // individually from single buttons, or as a group from the download all
+        // button.
+
         private void _downloadSystemsData ()
         {
             lblWorking.Text = "Downloading Systems Data, please wait ...";
-            this.Update();
+            this.Update(); // forces the message loop to update the screen
+
+            // this is downloaded synchronously, later I could use a background
+            // thread, but that was overkill for this app.
+
+            // Found this pattern to download a file from a website and store
+            // it as in a local file.
 
             using (var client = new WebClient())
             {
